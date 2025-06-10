@@ -1,9 +1,10 @@
-name: Run checks on pull_request
+name: Check
 
 # This workflow runs checks on pull requests to ensure code quality and consistency.
 
 on:
   - pull_request
+  - push
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
