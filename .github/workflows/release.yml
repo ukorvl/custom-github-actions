@@ -1,0 +1,33 @@
+name: Release
+
+# This workflow creates a release in the repo when a new tag is pushed to the main branch.
+# If you run workflow manually, select the tag you want to release when running the workflow.
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create a new release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          make_latest: true
+          generate_release_notes: true

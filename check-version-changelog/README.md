@@ -16,3 +16,4 @@ uses: ukorvl/custom-github-actions/check-version-changelog@v1
 with:
   PACKAGE_JSON: "lib/package.json"
   CHANGELOG_FILE: "lib/CHANGELOG.md"
+```
