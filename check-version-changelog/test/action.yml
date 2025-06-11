@@ -1,0 +1,58 @@
+name: "Test Check Version and Changelog"
+description: "Runs tests for the check-version-changelog action"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Set up test environment
+      shell: bash
+      run: |
+        mkdir -p lib
+
+        git checkout -B main
+
+        echo '{"version": "1.0.0"}' > lib/package.json
+        echo "# Changelog" > lib/CHANGELOG.md
+        echo "## 1.0.0" >> lib/CHANGELOG.md
+        git add lib/package.json lib/CHANGELOG.md
+
+        git config user.name "Test User"
+        git config user.email "test@test.com"
+
+        git commit -m "Initial version"
+
+    - name: Run changelog check
+      uses: ./check-version-changelog
+      with:
+        PACKAGE_JSON: lib/package.json
+        CHANGELOG_FILE: lib/CHANGELOG.md
+        BASE_REF: main
+
+    - name: Update version (without changelog update)
+      shell: bash
+      run: |
+        echo '{"version": "1.0.1"}' > lib/package.json
+        git add lib/package.json
+        git commit -m "Update version to 1.0.1"
+
+    - name: Run changelog check again
+      uses: ./check-version-changelog
+      id: should_fail
+      with:
+        PACKAGE_JSON: lib/package.json
+        CHANGELOG_FILE: lib/CHANGELOG.md
+        BASE_REF: main
+      continue-on-error: true
+
+    - name: Check if the action failed as expected
+      shell: bash
+      run: |
+        if [ "${{ steps.should_fail.outcome }}" != "failure" ]; then
+          echo "❌ Expected the action to fail, but it succeeded."
+          exit 1
+        else
+          echo "✅ Action failed as expected."
+        fi
