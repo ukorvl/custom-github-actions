@@ -4,10 +4,11 @@ A composite GitHub Action that checks if `package.json` version has changed, and
 
 ## Inputs
 
-| Name           | Description                          | Default            |
-|----------------|--------------------------------------|--------------------|
-| `PACKAGE_JSON` | Path to your `package.json` file     | `lib/package.json` |
-| `CHANGELOG_FILE` | Path to your changelog file        | `lib/CHANGELOG.md` |
+| Name             | Description                          | Default            |
+|------------------|--------------------------------------|--------------------|
+| `PACKAGE_JSON`   | Path to your `package.json` file     | `lib/package.json` |
+| `CHANGELOG_FILE` | Path to your changelog file          | `lib/CHANGELOG.md` |
+| `BASE_REF`       | Base branch to compare against       | `origin/main`      |
 
 ## Example usage
 
@@ -16,4 +17,5 @@ uses: ukorvl/custom-github-actions/check-version-changelog@v1
 with:
   PACKAGE_JSON: "lib/package.json"
   CHANGELOG_FILE: "lib/CHANGELOG.md"
+  BASE_REF: "origin/main"
 ```
