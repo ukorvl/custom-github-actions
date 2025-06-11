@@ -13,7 +13,7 @@ When you are ready to contribute your changes, follow these steps:
    ```sh
    git push origin feature/my-new-feature
    ```
-3. **Create a tag of the release**:
+3. **Create a tag of the release (optional)**:
    When someone references reusable GitHub Action in their workflow, they should use a tag or commit sha to ensure that the action will not change unexpectedly. To create a tag, run:
    ```sh
    git tag v1 # Replace with the appropriate version number
@@ -27,7 +27,7 @@ When you are ready to contribute your changes, follow these steps:
    - Go to the original repository.
    - Click "New Pull Request".
    - Select your branch and submit the PR with a clear description.
-5. **Release**:
+5. **Release (optional)**:
    Push your created tag to the main branch of the repository. This will trigger the release workflow, which will create a new release on GitHub with the specified tag.
 
 ## Issues and Feature Requests
