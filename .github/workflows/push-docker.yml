@@ -1,0 +1,45 @@
+name: Push docker
+description: Build and push docker images
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "docker/**"
+      - "Dockerfile"
+
+permissions:
+  packages: write
+
+jobs:
+  call-docker-lint:
+    uses: ./.github/workflows/check-docker.yml
+
+  push:
+    needs: call-docker-lint
+    name: "Build and push docker images"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: "Login to registry"
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Build and push each of docker images in the repo"
+        run: |
+          set -eo pipefail
+          find docker -name 'Dockerfile' | while read -r file; do
+            echo "Building and pushing $file"
+            dir=$(dirname "$file")
+            image_name="ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:${dir//\//-}"
+            docker build -t "$image_name" "$dir"
+            docker push "$image_name"
+          done
+        shell: bash
