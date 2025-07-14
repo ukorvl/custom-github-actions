@@ -12,3 +12,7 @@ A collection of custom, reusable GitHub Actions for automation, versioning, and 
 ## Available Actions
 
 - [`check-version-changelog`](./check-version-changelog)
+
+## Docker images
+
+- [playwright](./docker/playwright) - a docker image with cached playwright browsers and dependencies for faster CI runs.

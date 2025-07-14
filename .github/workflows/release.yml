@@ -1,5 +1,5 @@
 name: Release
-description: this workflow creates a release in the repo when a new tag is pushed to the main branch.
+description: This workflow creates a release in the repo when a new tag is pushed to the main branch.
 # If you run workflow manually, select the tag you want to release when running the workflow.
 
 on:
