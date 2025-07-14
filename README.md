@@ -25,7 +25,7 @@ Usage:
     your-job:
       runs-on: ubuntu-latest
       container:
-        image: ukorvl/custom-github-actions-playwright:latest
+        image: ghcr.io/ukorvl/custom-github-actions-playwright:latest
       steps:
         ...
   ```
