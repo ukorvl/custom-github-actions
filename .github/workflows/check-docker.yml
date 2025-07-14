@@ -2,6 +2,7 @@ name: Check docker
 description: This workflow runs checks on docker files
 
 on:
+  workflow_call:
   workflow_dispatch:
   pull_request:
     paths:
