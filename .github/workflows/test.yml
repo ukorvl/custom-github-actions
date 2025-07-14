@@ -1,4 +1,4 @@
-name: Test
+name: Test Actions
 description: This workflow runs tests against custom actions
 
 on:

@@ -15,4 +15,4 @@ A collection of custom, reusable GitHub Actions for automation, versioning, and 
 
 ## Docker images
 
-- [playwright](./docker/playwright) - a docker image with cached playwright browsers and dependencies for faster CI runs.
+- [playwright](./docker/playwright/Dockerfile) - a docker image with cached playwright browsers and dependencies for faster CI runs.

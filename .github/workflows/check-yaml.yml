@@ -1,4 +1,4 @@
-name: Check yaml
+name: Check YAML
 description: This workflow runs checks on yaml files
 
 on:
