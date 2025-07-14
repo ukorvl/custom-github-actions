@@ -1,4 +1,4 @@
-name: Check docker
+name: Check Docker
 description: This workflow runs checks on docker files
 
 on:
@@ -35,9 +35,19 @@ jobs:
 
       - name: Lint all Dockerfiles
         run: |
-          set set -eo pipefail
+          set -eo pipefail
           find docker -name 'Dockerfile' | while read -r file; do
             echo "Linting $file"
             cat "$file" | docker run --rm -i hadolint/hadolint hadolint --verbose -
+          done
+        shell: bash
+
+      - name: Build images (dry run)
+        run: |
+          set -eo pipefail
+          find docker -name 'Dockerfile' | while read -r file; do
+            echo "Building $file"
+            dir=$(dirname "$file")
+            docker build --pull --no-cache --file "$file" --tag "dummy-image" "$dir"
           done
         shell: bash
