@@ -1,11 +1,16 @@
 name: Check
-description: this workflow runs checks on pull requests to ensure code quality and consistency.
+description: This workflow runs checks on yaml files
 
 on:
+  workflow_dispatch:
   pull_request:
+    paths:
+      - "**/*.yml"
   push:
     branches:
       - main
+    paths:
+      - "**/*.yml"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -35,15 +40,3 @@ jobs:
           yamllint_config_datapath: .yamllint
         env:
           GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  test:
-    name: "Test actions"
-    runs-on: ubuntu-latest
-    steps:
-      - name: "Checkout"
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Run test check-version-changelog
-        uses: ./check-version-changelog/test
