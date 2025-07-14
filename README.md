@@ -15,4 +15,17 @@ A collection of custom, reusable GitHub Actions for automation, versioning, and 
 
 ## Docker images
 
-- [playwright](./docker/playwright/Dockerfile) - a docker image with cached playwright browsers and dependencies for faster CI runs.
+### Playwright
+[playwright](./docker/playwright/Dockerfile) - a docker image with cached playwright browsers and dependencies for faster CI runs.
+
+Usage:
+
+  ```yaml
+  jobs:
+    your-job:
+      runs-on: ubuntu-latest
+      container:
+        image: ukorvl/custom-github-actions-playwright:latest
+      steps:
+        ...
+  ```

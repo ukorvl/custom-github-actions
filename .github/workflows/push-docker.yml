@@ -6,9 +6,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - "docker/**"
-      - "Dockerfile"
 
 permissions:
   packages: write
@@ -40,7 +37,7 @@ jobs:
           find docker -name 'Dockerfile' | while read -r file; do
             echo "Building and pushing $file"
             dir=$(dirname "$file")
-            image_name="ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:${dir//\//-}"
+            image_name="ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}-$(basename "$dir")"
             docker build -t "$image_name" "$dir"
             docker push "$image_name"
           done
