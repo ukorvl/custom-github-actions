@@ -11,7 +11,9 @@ RUN apt-get remove -y nodejs && \
     apt-get install -y --no-install-recommends \
     nodejs \
     jq \
-    perl && \
+    perl \
+    unzip \
+    && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     npm install -g npm@latest && \
