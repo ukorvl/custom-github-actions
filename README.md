@@ -12,6 +12,7 @@ A collection of custom, reusable GitHub Actions for automation, versioning, and 
 ## Available Actions
 
 - [`check-version-changelog`](./check-version-changelog)
+- [`check-npm-licenses`](./check-npm-licenses)
 
 ## Docker images
 

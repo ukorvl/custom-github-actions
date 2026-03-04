@@ -1,0 +1,111 @@
+name: "Test Check npm licenses"
+description: "Runs tests for the check-npm-licenses action"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v5
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v6
+      with:
+        node-version: "22"
+
+    - name: Prepare fixture
+      shell: bash
+      run: |
+        rm -rf test-fixtures/npm-licenses
+        mkdir -p test-fixtures/npm-licenses/packages/app
+        mkdir -p test-fixtures/npm-licenses/packages/internal
+        mkdir -p test-fixtures/npm-licenses/vendor/third-party-ok
+        mkdir -p test-fixtures/npm-licenses/vendor/third-party-bad
+
+        cat > test-fixtures/npm-licenses/packages/internal/package.json <<'JSON'
+        {
+          "name": "@fixture/internal",
+          "version": "1.0.0",
+          "private": true,
+          "license": "UNLICENSED"
+        }
+        JSON
+
+        cat > test-fixtures/npm-licenses/packages/app/package.json <<'JSON'
+        {
+          "name": "@fixture/app",
+          "version": "1.0.0",
+          "private": true,
+          "dependencies": {
+            "@fixture/internal": "file:../internal",
+            "third-party-ok": "file:../../vendor/third-party-ok"
+          }
+        }
+        JSON
+
+        cat > test-fixtures/npm-licenses/vendor/third-party-ok/package.json <<'JSON'
+        {
+          "name": "third-party-ok",
+          "version": "1.0.0",
+          "license": "MIT"
+        }
+        JSON
+
+        cat > test-fixtures/npm-licenses/vendor/third-party-bad/package.json <<'JSON'
+        {
+          "name": "third-party-bad",
+          "version": "1.0.0",
+          "license": "GPL-3.0"
+        }
+        JSON
+
+        (
+          cd test-fixtures/npm-licenses/packages/app
+          npm install
+        )
+
+    - name: Run license check (should pass)
+      uses: ./check-npm-licenses
+      with:
+        ROOT_DIR: test-fixtures/npm-licenses
+        PACKAGE_GLOBS: packages/*
+        INCLUDE_ROOT_PACKAGE: false
+
+    - name: Switch dependency to disallowed license
+      shell: bash
+      run: |
+        cat > test-fixtures/npm-licenses/packages/app/package.json <<'JSON'
+        {
+          "name": "@fixture/app",
+          "version": "1.0.0",
+          "private": true,
+          "dependencies": {
+            "@fixture/internal": "file:../internal",
+            "third-party-bad": "file:../../vendor/third-party-bad"
+          }
+        }
+        JSON
+
+        (
+          cd test-fixtures/npm-licenses/packages/app
+          rm -rf node_modules package-lock.json
+          npm install
+        )
+
+    - name: Run license check again (should fail)
+      id: should_fail
+      uses: ./check-npm-licenses
+      with:
+        ROOT_DIR: test-fixtures/npm-licenses
+        PACKAGE_GLOBS: packages/*
+        INCLUDE_ROOT_PACKAGE: false
+      continue-on-error: true
+
+    - name: Check if action failed as expected
+      shell: bash
+      run: |
+        if [ "${{ steps.should_fail.outcome }}" != "failure" ]; then
+          echo "❌ Expected the action to fail, but it succeeded."
+          exit 1
+        else
+          echo "✅ Action failed as expected."
+        fi

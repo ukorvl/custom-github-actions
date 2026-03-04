@@ -24,3 +24,6 @@ jobs:
 
       - name: Run test check-version-changelog
         uses: ./check-version-changelog/test
+
+      - name: Run test check-npm-licenses
+        uses: ./check-npm-licenses/test
