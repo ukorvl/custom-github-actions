@@ -1,0 +1,71 @@
+name: "Check npm licenses"
+description: "Checks production dependency licenses for npm packages"
+
+inputs:
+  ROOT_DIR:
+    description: "Project root directory"
+    required: false
+    default: "."
+  PACKAGE_PATHS:
+    description: "Explicit package directories to check (comma/newline separated, relative to ROOT_DIR)"
+    required: false
+    default: ""
+  PACKAGE_GLOBS:
+    description: "Glob patterns for package directories (comma/newline separated). Used when PACKAGE_PATHS is empty"
+    required: false
+    default: ""
+  AUTO_DISCOVER:
+    description: "Auto-discovery mode when PACKAGE_PATHS/PACKAGE_GLOBS are empty: auto|root|manifests|all"
+    required: false
+    default: "auto"
+  INCLUDE_ROOT_PACKAGE:
+    description: "Include ROOT_DIR package if package.json exists: auto|true|false"
+    required: false
+    default: "auto"
+  IGNORE_DIR_NAMES:
+    description: "Directory names ignored during glob/recursive discovery (comma/newline separated)"
+    required: false
+    default: |
+      node_modules
+      .git
+  APPROVED_LICENSES:
+    description: "Approved license identifiers (comma/newline separated)"
+    required: false
+    default: |
+      Apache-2.0
+      BSD-2-Clause
+      BSD-3-Clause
+      CC0-1.0
+      ISC
+      MIT
+      Unlicense
+  EXCLUDE_PACKAGE_NAMES:
+    description: "Package names to ignore during checks (comma/newline separated)"
+    required: false
+    default: ""
+  LICENSE_CHECKER_BIN:
+    description: "NPM package/binary name used by npx"
+    required: false
+    default: "license-checker-rseidelsohn@4.4.2"
+  LICENSE_CHECKER_ARGS:
+    description: "Arguments passed to the license checker binary"
+    required: false
+    default: "--production --json"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Check licenses
+      shell: bash
+      run: node "${{ github.action_path }}/scripts/check-npm-licenses.mjs"
+      env:
+        ROOT_DIR: ${{ inputs.ROOT_DIR }}
+        PACKAGE_PATHS: ${{ inputs.PACKAGE_PATHS }}
+        PACKAGE_GLOBS: ${{ inputs.PACKAGE_GLOBS }}
+        AUTO_DISCOVER: ${{ inputs.AUTO_DISCOVER }}
+        INCLUDE_ROOT_PACKAGE: ${{ inputs.INCLUDE_ROOT_PACKAGE }}
+        IGNORE_DIR_NAMES: ${{ inputs.IGNORE_DIR_NAMES }}
+        APPROVED_LICENSES: ${{ inputs.APPROVED_LICENSES }}
+        EXCLUDE_PACKAGE_NAMES: ${{ inputs.EXCLUDE_PACKAGE_NAMES }}
+        LICENSE_CHECKER_BIN: ${{ inputs.LICENSE_CHECKER_BIN }}
+        LICENSE_CHECKER_ARGS: ${{ inputs.LICENSE_CHECKER_ARGS }}
